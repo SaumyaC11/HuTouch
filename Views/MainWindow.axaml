@@ -1,0 +1,75 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FileUploadApp.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="FileUploadApp.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="FileUploadApp"
+        Width="600" Height="500">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+
+	<Grid>
+		<Border MaxWidth="420"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Padding="24"
+                CornerRadius="8"
+                BorderThickness="1"
+                BorderBrush="#333333">
+			<StackPanel Spacing="16">
+
+				<TextBlock Text="Upload a File"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+
+				<Button Content="Browse File"
+                        HorizontalAlignment="Center"
+                        Command="{Binding BrowseCommand}"
+                        CommandParameter="{Binding $parent[Window]}"/>
+
+				<TextBlock Text="{Binding FileNameDisplay}"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"/>
+
+				<TextBlock Text="{Binding FileSizeDisplay}"
+                           HorizontalAlignment="Center"
+                           Foreground="Gray"/>
+
+				<ProgressBar Minimum="0" Maximum="100"
+                             Value="{Binding UploadProgress}"
+                             Height="18"/>
+
+				<TextBlock Text="{Binding StatusMessage}"
+                           HorizontalAlignment="Center"
+                           FontWeight="SemiBold"/>
+
+				<Button Content="Upload"
+                        HorizontalAlignment="Center"
+                        Command="{Binding UploadCommand}"/>
+
+				<Separator Margin="0,8"/>
+
+				<TextBlock Text="Recent Uploads" FontWeight="Bold"/>
+				<ItemsControl ItemsSource="{Binding RecentUploads}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Grid ColumnDefinitions="*,Auto,Auto" Margin="0,2">
+								<TextBlock Grid.Column="0" Text="{Binding FileName}"/>
+								<TextBlock Grid.Column="1" Text="{Binding DisplaySize}" Margin="8,0"/>
+								<TextBlock Grid.Column="2" Text="{Binding Status}"/>
+							</Grid>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+
+			</StackPanel>
+		</Border>
+	</Grid>
+</Window>
