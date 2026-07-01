@@ -141,7 +141,8 @@ public partial class MainWindowViewModel : ObservableObject
                 FileName = FileNameDisplay,
                 SizeInBytes = new FileInfo(SelectedFilePath).Length,
                 Timestamp = DateTime.Now,
-                Status = "Completed"
+                Status = "Completed",
+                IconPath = GetIconPath(SelectedFilePath)
             });
 
             ScheduleReset();
@@ -162,7 +163,8 @@ public partial class MainWindowViewModel : ObservableObject
                 FileName = FileNameDisplay,
                 SizeInBytes = SelectedFilePath is not null ? new FileInfo(SelectedFilePath).Length : 0,
                 Timestamp = DateTime.Now,
-                Status = "Error"
+                Status = "Error",
+                IconPath = GetIconPath(SelectedFilePath)
             });
         }
         finally
@@ -278,6 +280,25 @@ public partial class MainWindowViewModel : ObservableObject
             "ZIP" => "ZIP Archive",
             "MP4" => "MP4 Video",
             _ => string.IsNullOrWhiteSpace(ext) ? "Unknown File" : $"{ext} File"
+        };
+    }
+
+    private static string GetIconPath(string? fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return "/Assets/Icons/file.svg";
+        
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+        return extension switch
+        {
+            ".pdf" => "/Assets/Icons/pdf.svg",
+            ".doc" or ".docx" => "/Assets/Icons/word.svg",
+            ".ppt" or ".pptx" => "/Assets/Icons/powerpoint.svg",
+            ".xls" or ".xlsx" => "/Assets/Icons/excel.svg",
+            ".zip" => "/Assets/Icons/zip.svg",
+            ".png" or ".jpg" or ".jpeg" => "/Assets/Icons/image.svg",
+            ".mp4" => "/Assets/Icons/zip.svg",
+            _ => "/Assets/Icons/file.svg"
         };
     }
 }

@@ -394,28 +394,15 @@
                                                 Spacing="8">
 
 										<Border Width="28"
-                                                Height="28"
-                                                Background="#F1F5F9"
-                                                CornerRadius="4">
+												Height="28"
+												Background="#F1F5F9"
+												CornerRadius="4">
 
-											<Viewbox Width="16"
-                                                     Height="16"
-                                                     HorizontalAlignment="Center"
-                                                     VerticalAlignment="Center">
-												<Canvas Width="24" Height="24">
-													<Path Stroke="#64748B"
-                                                          StrokeThickness="1.8"
-                                                          Fill="Transparent"
-                                                          StrokeJoin="Round"
-                                                          Data="M6 2.75H14.5L19 7.25V21.25H6V2.75Z"/>
-
-													<Path Stroke="#64748B"
-                                                          StrokeThickness="1.8"
-                                                          Fill="Transparent"
-                                                          StrokeJoin="Round"
-                                                          Data="M14.5 2.75V7.25H19"/>
-												</Canvas>
-											</Viewbox>
+											<svg:Svg Path="{Binding IconPath}"
+													 Width="18"
+													 Height="18"
+													 HorizontalAlignment="Center"
+													 VerticalAlignment="Center"/>
 										</Border>
 
 										<TextBlock Text="{Binding FileName}"
