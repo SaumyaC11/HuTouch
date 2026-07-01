@@ -36,17 +36,20 @@ namespace FileUploadApp.Services
                 var processInfo = new ProcessStartInfo
                 {
                     FileName = "/usr/bin/osascript",
-                    Arguments = $"-e \"{script}\"",
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true
                 };
+
+                processInfo.ArgumentList.Add("-e");
+                processInfo.ArgumentList.Add(script);
 
                 using var process = Process.Start(processInfo);
             }
             catch
             {
-                // Do not crash the app if notification fails.
-                // Upload logic should still complete normally.
+                // Notification failure should not crash the upload flow.
             }
         }
 
