@@ -24,4 +24,6 @@ namespace FileUploadApp.Models
         public string StatusBackground => Status == "Completed" ? "#DCFCE7" : "#FEE2E2";
         public string StatusForeground => Status == "Completed" ? "#16A34A" : "#DC2626";
     }
+
+
 }

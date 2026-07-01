@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace FileUploadApp.Services
 {
@@ -6,13 +6,21 @@ namespace FileUploadApp.Services
     {
         public static INotificationService Create()
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
 #if WINDOWS10_0_19041_0_OR_GREATER
-            Debug.WriteLine("[NotificationServiceFactory] Building with WINDOWS10_0_19041_0_OR_GREATER defined -> using WindowsNotificationService.");
-            return new WindowsNotificationService();
+                return new WindowsNotificationService();
 #else
-            Debug.WriteLine("[NotificationServiceFactory] WINDOWS10_0_19041_0_OR_GREATER is NOT defined for this build -> using MacNotificationService (no-op on Windows). Check which TargetFramework you're running.");
-            return new MacNotificationService();
+                return new NullNotificationService();
 #endif
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return new MacNotificationService();
+            }
+
+            return new NullNotificationService();
         }
     }
 }
