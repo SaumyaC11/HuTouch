@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+.vscode/   optional, usually avoid unless shared team settings
+.idea/
+*.user
+*.suo
+*.cache
+*.log

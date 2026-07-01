@@ -7,7 +7,7 @@ namespace FileUploadApp.Models
         public string FileName { get; set; } = string.Empty;
         public long SizeInBytes { get; set; }
         public DateTime Timestamp { get; set; }
-        public string Status { get; set; } = string.Empty; // "Completed", "Error", etc.
+        public string Status { get; set; } = string.Empty;
 
         public string DisplaySize
         {
@@ -20,5 +20,8 @@ namespace FileUploadApp.Models
                 return $"{SizeInBytes} B";
             }
         }
+
+        public string StatusBackground => Status == "Completed" ? "#DCFCE7" : "#FEE2E2";
+        public string StatusForeground => Status == "Completed" ? "#16A34A" : "#DC2626";
     }
 }

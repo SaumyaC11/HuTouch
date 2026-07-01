@@ -1,75 +1,476 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FileUploadApp.ViewModels"
+        xmlns:models="using:FileUploadApp.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
+        d:DesignWidth="900"
+        d:DesignHeight="600"
         x:Class="FileUploadApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="FileUploadApp"
-        Width="600" Height="500">
+        Title="File Upload App"
+        Width="900"
+        Height="600"
+        MinWidth="700"
+        MinHeight="500"
+        Background="#F8F9FA">
 
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 
-	<Grid>
-		<Border MaxWidth="420"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Padding="24"
-                CornerRadius="8"
-                BorderThickness="1"
-                BorderBrush="#333333">
-			<StackPanel Spacing="16">
+	<Window.Styles>
+		<Style Selector="Button.PrimaryButton">
+			<Setter Property="Background" Value="#3B82F6"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#3B82F6"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
 
-				<TextBlock Text="Upload a File"
-                           FontSize="20"
+		<Style Selector="Button.PrimaryButton:pointerover">
+			<Setter Property="Background" Value="#2563EB"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#2563EB"/>
+		</Style>
+
+		<Style Selector="Button.PrimaryButton:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="#2563EB"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#2563EB"/>
+		</Style>
+
+		<Style Selector="Button.PrimaryButton:pressed">
+			<Setter Property="Background" Value="#1D4ED8"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#1D4ED8"/>
+		</Style>
+
+		<Style Selector="Button.PrimaryButton:pressed /template/ ContentPresenter">
+			<Setter Property="Background" Value="#1D4ED8"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#1D4ED8"/>
+		</Style>
+
+		<Style Selector="Button.CancelButton">
+			<Setter Property="Background" Value="#FEE2E2"/>
+			<Setter Property="Foreground" Value="#DC2626"/>
+			<Setter Property="BorderBrush" Value="#FEE2E2"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
+
+		<Style Selector="Button.CancelButton:pointerover">
+			<Setter Property="Background" Value="#DC2626"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#DC2626"/>
+		</Style>
+
+		<Style Selector="Button.CancelButton:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="#DC2626"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#DC2626"/>
+		</Style>
+
+		<Style Selector="Button.CancelButton:pressed">
+			<Setter Property="Background" Value="#B91C1C"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#B91C1C"/>
+		</Style>
+
+		<Style Selector="Button.CancelButton:pressed /template/ ContentPresenter">
+			<Setter Property="Background" Value="#B91C1C"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#B91C1C"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid ColumnDefinitions="*,1,*">
+
+		<!-- LEFT PANEL -->
+		<Grid Grid.Column="0"
+              RowDefinitions="Auto,*,Auto"
+              Margin="28,24,28,0">
+
+			<!-- Heading -->
+			<StackPanel Grid.Row="0" Margin="0,0,0,12">
+				<TextBlock Text="Upload File"
+                           FontSize="22"
                            FontWeight="Bold"
-                           HorizontalAlignment="Center"/>
+                           Foreground="#1A1A2E"/>
 
-				<Button Content="Browse File"
-                        HorizontalAlignment="Center"
-                        Command="{Binding BrowseCommand}"
-                        CommandParameter="{Binding $parent[Window]}"/>
+				<TextBlock Text="Drag and drop a file here or click Browse to select a file"
+                           FontSize="13"
+                           Foreground="#6B7280"
+                           Margin="0,4,0,0"/>
+			</StackPanel>
 
-				<TextBlock Text="{Binding FileNameDisplay}"
-                           HorizontalAlignment="Center"
-                           TextWrapping="Wrap"/>
+			<!-- Drop Zone -->
+			<Border Grid.Row="1"
+                    BorderBrush="#CBD5E1"
+                    BorderThickness="2"
+                    CornerRadius="10"
+                    Background="White"
+                    DragDrop.AllowDrop="True"
+                    Name="DropZone">
 
-				<TextBlock Text="{Binding FileSizeDisplay}"
-                           HorizontalAlignment="Center"
-                           Foreground="Gray"/>
+				<StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Spacing="8">
 
-				<ProgressBar Minimum="0" Maximum="100"
-                             Value="{Binding UploadProgress}"
-                             Height="18"/>
+					<Canvas Width="56"
+                            Height="56"
+                            HorizontalAlignment="Center">
 
-				<TextBlock Text="{Binding StatusMessage}"
-                           HorizontalAlignment="Center"
-                           FontWeight="SemiBold"/>
+						<Path Fill="#3B82F6"
+                              Data="M28 8 C18 8 12 16 12 22 C6 23 2 28 2 34 C2 40 7 45 14 45 L42 45 C49 45 54 40 54 34 C54 28 49 23 43 22 C43 22 42 8 28 8 Z"/>
 
-				<Button Content="Upload"
-                        HorizontalAlignment="Center"
-                        Command="{Binding UploadCommand}"/>
+						<Path Stroke="White"
+                              StrokeThickness="2.5"
+                              StrokeLineCap="Round"
+                              StrokeJoin="Round"
+                              Data="M28 20 L28 38 M20 28 L28 20 L36 28"/>
+					</Canvas>
 
-				<Separator Margin="0,8"/>
+					<TextBlock Text="Drag &amp; drop your file here"
+                               FontSize="14"
+                               Foreground="#374151"
+                               HorizontalAlignment="Center"/>
 
-				<TextBlock Text="Recent Uploads" FontWeight="Bold"/>
+					<TextBlock Text="or"
+                               FontSize="13"
+                               Foreground="#9CA3AF"
+                               HorizontalAlignment="Center"/>
+
+					<Button Classes="PrimaryButton"
+                            Command="{Binding BrowseCommand}"
+                            CommandParameter="{Binding $parent[Window]}"
+                            HorizontalAlignment="Center"
+                            Padding="18,10"
+                            CornerRadius="6"
+                            FontWeight="SemiBold"
+                            FontSize="13">
+
+						<StackPanel Orientation="Horizontal" Spacing="6">
+							<Viewbox Width="14" Height="14" VerticalAlignment="Center">
+								<Canvas Width="24" Height="24">
+									<Path Fill="White"
+                                          Data="M3 6.5C3 5.67 3.67 5 4.5 5H9L11 7H19.5C20.33 7 21 7.67 21 8.5V18.5C21 19.33 20.33 20 19.5 20H4.5C3.67 20 3 19.33 3 18.5V6.5Z"/>
+								</Canvas>
+							</Viewbox>
+
+							<TextBlock Text="Browse File"
+                                       VerticalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+				</StackPanel>
+			</Border>
+
+			<!-- File Card + Progress -->
+			<StackPanel Grid.Row="2"
+                        Spacing="12"
+                        Margin="0,16,0,0"
+                        IsVisible="{Binding HasSelectedFile}">
+
+				<!-- File card -->
+				<Border Background="White"
+                        BorderBrush="#E5E7EB"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12,10">
+
+					<Grid ColumnDefinitions="Auto,*,Auto,Auto">
+
+						<Border Grid.Column="0"
+                                Width="36"
+                                Height="36"
+                                Background="#F1F5F9"
+                                CornerRadius="6"
+                                Margin="0,0,10,0">
+
+							<Viewbox Width="18"
+                                     Height="18"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center">
+								<Canvas Width="24" Height="24">
+									<Path Stroke="#64748B"
+                                          StrokeThickness="1.8"
+                                          Fill="Transparent"
+                                          StrokeJoin="Round"
+                                          Data="M6 2.75H14.5L19 7.25V21.25H6V2.75Z"/>
+
+									<Path Stroke="#64748B"
+                                          StrokeThickness="1.8"
+                                          Fill="Transparent"
+                                          StrokeJoin="Round"
+                                          Data="M14.5 2.75V7.25H19"/>
+								</Canvas>
+							</Viewbox>
+						</Border>
+
+						<StackPanel Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Spacing="2">
+
+							<TextBlock Text="{Binding FileNameDisplay}"
+                                       FontWeight="SemiBold"
+                                       FontSize="13"
+                                       Foreground="#1A1A2E"
+                                       TextTrimming="CharacterEllipsis"/>
+
+							<TextBlock Text="{Binding FileTypeDisplay}"
+                                       FontSize="12"
+                                       Foreground="#94A3B8"/>
+						</StackPanel>
+
+						<TextBlock Grid.Column="2"
+                                   Text="{Binding FileSizeDisplay}"
+                                   FontSize="13"
+                                   Foreground="#64748B"
+                                   VerticalAlignment="Center"
+                                   Margin="8,0"/>
+
+						<Button Grid.Column="3"
+                                Command="{Binding ClearFileCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="4"
+                                Cursor="Hand"
+                                IsEnabled="{Binding !IsUploading}">
+							<TextBlock Text="×"
+                                       FontSize="18"
+                                       Foreground="#94A3B8"/>
+						</Button>
+					</Grid>
+				</Border>
+
+				<!-- Progress -->
+				<Grid ColumnDefinitions="Auto,*,Auto"
+                      Margin="2,0">
+
+					<TextBlock Grid.Column="0"
+                               Text="Progress"
+                               FontSize="13"
+                               Foreground="#374151"
+                               VerticalAlignment="Center"/>
+
+					<ProgressBar Grid.Column="1"
+                                 Minimum="0"
+                                 Maximum="100"
+                                 Value="{Binding UploadProgress}"
+                                 Height="6"
+                                 Margin="12,0"
+                                 CornerRadius="3"
+                                 Foreground="#3B82F6"
+                                 Background="#E5E7EB"/>
+
+					<TextBlock Grid.Column="2"
+                               Text="{Binding UploadProgress, StringFormat='{}{0}%'}"
+                               FontSize="13"
+                               Foreground="#374151"
+                               VerticalAlignment="Center"/>
+				</Grid>
+
+				<!-- Status + Buttons -->
+				<Grid ColumnDefinitions="*,Auto,Auto">
+
+					<StackPanel Grid.Column="0"
+                                Orientation="Horizontal"
+                                Spacing="4">
+
+						<TextBlock Text="Status:"
+                                   FontSize="13"
+                                   Foreground="#374151"
+                                   VerticalAlignment="Center"/>
+
+						<TextBlock Text="{Binding StatusMessage}"
+                                   FontSize="13"
+                                   Foreground="#3B82F6"
+                                   VerticalAlignment="Center"/>
+					</StackPanel>
+
+					<Button Grid.Column="1"
+                            Classes="CancelButton"
+                            Command="{Binding CancelCommand}"
+                            IsVisible="{Binding IsUploading}"
+                            Margin="0,0,8,0"
+                            Padding="14,7"
+                            CornerRadius="6"
+                            FontSize="13"
+                            FontWeight="SemiBold">
+						Cancel
+					</Button>
+
+					<Button Grid.Column="2"
+                            Classes="PrimaryButton"
+                            Command="{Binding UploadCommand}"
+                            IsVisible="{Binding !IsUploading}"
+                            Padding="14,7"
+                            CornerRadius="6"
+                            FontSize="13"
+                            FontWeight="SemiBold">
+						Upload
+					</Button>
+				</Grid>
+			</StackPanel>
+
+			<!-- Footer -->
+			<TextBlock Grid.Row="2"
+                       Text="Max file size: 500 MB"
+                       FontSize="12"
+                       Foreground="#9CA3AF"
+                       Margin="0,8,0,12"
+                       IsVisible="{Binding !HasSelectedFile}"/>
+		</Grid>
+
+		<!-- DIVIDER -->
+		<Rectangle Grid.Column="1"
+                   Fill="#E5E7EB"
+                   Width="1"/>
+
+		<!-- RIGHT PANEL -->
+		<Grid Grid.Column="2"
+              RowDefinitions="Auto,Auto,*,Auto"
+              Margin="28,24,28,24">
+
+			<TextBlock Grid.Row="0"
+                       Text="Uploaded Files"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="#1A1A2E"
+                       Margin="0,0,0,16"/>
+
+			<!-- Table header -->
+			<Border Grid.Row="1"
+                    BorderBrush="#E5E7EB"
+                    BorderThickness="0,0,0,1"
+                    Padding="0,0,0,8"
+                    Margin="0,0,0,4">
+
+				<Grid ColumnDefinitions="*,80,120,90">
+					<TextBlock Grid.Column="0"
+                               Text="File Name"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="#6B7280"/>
+
+					<TextBlock Grid.Column="1"
+                               Text="Size"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="#6B7280"/>
+
+					<TextBlock Grid.Column="2"
+                               Text="Uploaded On"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="#6B7280"/>
+
+					<TextBlock Grid.Column="3"
+                               Text="Status"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="#6B7280"/>
+				</Grid>
+			</Border>
+
+			<!-- Rows -->
+			<ScrollViewer Grid.Row="2">
 				<ItemsControl ItemsSource="{Binding RecentUploads}">
 					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<Grid ColumnDefinitions="*,Auto,Auto" Margin="0,2">
-								<TextBlock Grid.Column="0" Text="{Binding FileName}"/>
-								<TextBlock Grid.Column="1" Text="{Binding DisplaySize}" Margin="8,0"/>
-								<TextBlock Grid.Column="2" Text="{Binding Status}"/>
-							</Grid>
+						<DataTemplate x:DataType="models:UploadedFile">
+
+							<Border BorderBrush="#F3F4F6"
+                                    BorderThickness="0,0,0,1"
+                                    Padding="0,10">
+
+								<Grid ColumnDefinitions="*,80,120,90">
+
+									<StackPanel Grid.Column="0"
+                                                Orientation="Horizontal"
+                                                Spacing="8">
+
+										<Border Width="28"
+                                                Height="28"
+                                                Background="#F1F5F9"
+                                                CornerRadius="4">
+
+											<Viewbox Width="16"
+                                                     Height="16"
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center">
+												<Canvas Width="24" Height="24">
+													<Path Stroke="#64748B"
+                                                          StrokeThickness="1.8"
+                                                          Fill="Transparent"
+                                                          StrokeJoin="Round"
+                                                          Data="M6 2.75H14.5L19 7.25V21.25H6V2.75Z"/>
+
+													<Path Stroke="#64748B"
+                                                          StrokeThickness="1.8"
+                                                          Fill="Transparent"
+                                                          StrokeJoin="Round"
+                                                          Data="M14.5 2.75V7.25H19"/>
+												</Canvas>
+											</Viewbox>
+										</Border>
+
+										<TextBlock Text="{Binding FileName}"
+                                                   FontSize="13"
+                                                   Foreground="#1A1A2E"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"/>
+									</StackPanel>
+
+									<TextBlock Grid.Column="1"
+                                               Text="{Binding DisplaySize}"
+                                               FontSize="13"
+                                               Foreground="#6B7280"
+                                               VerticalAlignment="Center"/>
+
+									<TextBlock Grid.Column="2"
+                                               Text="{Binding Timestamp, StringFormat='{}{0:M/d/yyyy h:mm tt}'}"
+                                               FontSize="12"
+                                               Foreground="#6B7280"
+                                               VerticalAlignment="Center"/>
+
+									<Border Grid.Column="3"
+                                            CornerRadius="12"
+                                            Padding="10,4"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Background="{Binding StatusBackground}">
+
+										<TextBlock Text="{Binding Status}"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{Binding StatusForeground}"/>
+									</Border>
+								</Grid>
+							</Border>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
+			</ScrollViewer>
 
-			</StackPanel>
-		</Border>
+			<!-- Empty state -->
+			<TextBlock Grid.Row="2"
+                       Text="No uploads yet"
+                       FontSize="14"
+                       Foreground="#9CA3AF"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding !RecentUploads.Count}"/>
+			<!-- Footer -->
+			<TextBlock Grid.Row="3"
+					   Text="Uploads are stored in your local application data"
+					   FontSize="12"
+					   Foreground="#9CA3AF"
+					   HorizontalAlignment="Right"
+					   VerticalAlignment="Bottom"
+					   Margin="0,12,0,0"/>
+		</Grid>
 	</Grid>
 </Window>
