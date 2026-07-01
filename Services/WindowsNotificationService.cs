@@ -1,6 +1,7 @@
 using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Diagnostics;
+//Toast notification
 namespace FileUploadApp.Services
 {
     public class WindowsNotificationService : INotificationService
@@ -14,10 +15,10 @@ namespace FileUploadApp.Services
                     .AddText($"{fileName} was uploaded successfully.")
                     .Show();
             }
-            catch (Exception ex)
+            catch
             {
-                // Toast failures were previously silent. Log so they're visible during diagnosis.
-                Debug.WriteLine($"[WindowsNotificationService] Failed to show completion toast: {ex}");
+                // Notification failure should not crash the upload flow.
+
             }
         }
 
@@ -30,9 +31,9 @@ namespace FileUploadApp.Services
                     .AddText($"{fileName}: {errorMessage}")
                     .Show();
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.WriteLine($"[WindowsNotificationService] Failed to show error toast: {ex}");
+                // Notification failure should not crash the upload flow.
             }
         }
     }

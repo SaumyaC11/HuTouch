@@ -1,10 +1,10 @@
 using System;
-
+// For upload status with artifacts like filename, size, timestamp, status
 namespace FileUploadApp.Models
 {
     public class UploadedFile
     {
-        public string FileName { get; set; } = string.Empty;
+        public string FileName { get; set; } = string.Empty; 
         public long SizeInBytes { get; set; }
         public DateTime Timestamp { get; set; }
         public string Status { get; set; } = string.Empty;

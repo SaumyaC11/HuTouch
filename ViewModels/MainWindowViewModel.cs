@@ -34,7 +34,7 @@ public partial class MainWindowViewModel : ObservableObject
     public ObservableCollection<UploadedFile> RecentUploads { get; } = new();
 
     public MainWindowViewModel()
-        : this(new FileUploadService(), NotificationServiceFactory.Create())
+        : this(new FileUploadService(), NotificationServiceFactory.Create()) 
     {
     }
 
@@ -159,7 +159,7 @@ public partial class MainWindowViewModel : ObservableObject
             _notificationService.SendUploadErrorNotification(FileNameDisplay, ex.Message);
 
             RecentUploads.Insert(0, new UploadedFile
-            {
+            {  
                 FileName = FileNameDisplay,
                 SizeInBytes = SelectedFilePath is not null ? new FileInfo(SelectedFilePath).Length : 0,
                 Timestamp = DateTime.Now,

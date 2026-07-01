@@ -23,7 +23,6 @@ public partial class App : Application
         {
             var notificationService = NotificationServiceFactory.Create();
             var fileUploadService = new FileUploadService();
-
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainWindowViewModel(fileUploadService, notificationService),
